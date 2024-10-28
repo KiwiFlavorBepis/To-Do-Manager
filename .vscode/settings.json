@@ -1,3 +1,4 @@
 {
-    "haskell.ghcupExecutablePath": "C:\\GHCUP\\bin\\ghcup.exe"
+    "haskell.ghcupExecutablePath": "C:\\ghcup\\bin\\ghcup.exe",
+    "haskell.ghcMod.executablePath": "stack"
 }

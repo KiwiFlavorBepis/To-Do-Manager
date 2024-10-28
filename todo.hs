@@ -1,36 +1,47 @@
-import Text.Read (Lexeme(String))
-
 main = do 
-    let options = ["add", "print", "search"]
     putStrLn "Welcome to Task Manager"
-    --- enterOptions
-    let tasks = ["t1", "t2", "t3", "t4"]
-    printList tasks
-    searchTasks tasks "Task 5"
-    let newTasks = addTask tasks "Task 5"
-    printList newTasks
-    searchTasks newTasks "Task 5"
+    enterOption []
 
-enterOption = do
-    putStrLn "Enter option:"
-    input <- getLine
-    let option = read input :: String
-    putStrLn option
-
-listOptions options = do 
+enterOption taskList = do
     putStrLn "Below are the options:"
-    printList options
-listTasks tasks = do
-    putStrLn "Here are your tasks:"
-    printList tasks
+    printList ["add", "print", "search"]
+    putStrLn "Enter option:"
+    option <- getLine
+    parseOption option taskList
+
+parseOption option taskList
+    | option == "add" = addTask taskList
+    | option == "print" = listTasks taskList
+    | option == "search" = searchTasks taskList
+    | otherwise = do
+        putStrLn "Error"
+        enterOption taskList
 
 printList [] = return ()
 printList (item:items) = do
     putStrLn $ "    " ++ item
     printList items
 
-addTask taskList task = taskList ++ [task]
+listTasks taskList = do
+    putStrLn "Here are your tasks:"
+    printList taskList
+    enterOption taskList
 
-searchTasks [] search = do
-    putStrLn $ "Could not find " ++ search
-searchTasks (task:tasks) search = if task == search then putStrLn $ "Found " ++ search else searchTasks tasks search
+addToList [] item = [item]
+addToList list item = list ++ [item]
+
+addTask taskList = do
+    putStrLn "Enter Task to Add:"
+    task <- getLine
+    enterOption (addToList taskList task)
+    
+searchList [] search = False
+searchList (item:items) search
+    | item == search = True
+    | otherwise = searchList items search
+
+searchTasks taskList = do
+    putStrLn "Enter Task to Search:"
+    task <- getLine
+    if searchList taskList task then putStrLn $ "Found " ++ task else putStrLn $ "Could not find " ++ task
+    enterOption taskList
